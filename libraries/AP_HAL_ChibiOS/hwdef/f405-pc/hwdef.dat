@@ -94,20 +94,24 @@ PB10 I2C2_SCL I2C2
 PB11 I2C2_SDA I2C2
 
 define HAL_I2C_CLEAR_ON_TIMEOUT 0
-define HAL_I2C_INTERNAL_MASK 1
+define HAL_I2C_INTERNAL_MASK 0
 
 
 # ---------------------- CAN bus -------------------------
+#PB8 CAN1_RX CAN1
+#PB9 CAN1_TX CAN1
+##PC13 GPIO_CAN1_SILENT OUTPUT PUSHPULL SPEED_LOW LOW
+#define CAN_NODE_UAVCAN 21
+#define CAN_PROTOCOL 1
+#define CAN_BAUDRATE 1000000
+#define BRD_SERIAL_NUM CAN_NODE_UAVCAN
+#define HAL_PERIPH_ENABLE_CAN
+#define HAL_CAN_ENABLED 1
+#
 PB8 CAN1_RX CAN1
 PB9 CAN1_TX CAN1
-#PC13 GPIO_CAN1_SILENT OUTPUT PUSHPULL SPEED_LOW LOW
 define CAN_NODE_UAVCAN 21
-define CAN_PROTOCOL 1
-define CAN_BAUDRATE 1000000
-define BRD_SERIAL_NUM CAN_NODE_UAVCAN
-define HAL_PERIPH_ENABLE_CAN
-define HAL_CAN_ENABLED 1
-
+define HAL_CAN_POOL_SIZE 1024
 
 # ---------------------- UARTs ---------------------------
 #           | sr0  | sr1  | sr2  | GPS | MSP |
@@ -166,16 +170,24 @@ define GPS_MAX_INSTANCES 1
 define GPS_PORT 6
 
 
-# ---------------------- COMPASS ---------------------------
+# no built-in compass, but probe the i2c bus for all possible
+# external compass types
 define HAL_PERIPH_ENABLE_MAG
-
-SPIDEV  rm3100 SPI2 DEVID1   MAG_CS MODE0  1*MHZ  1*MHZ
-COMPASS RM3100 SPI:rm3100 false ROTATION_PITCH_180
-
+define ALLOW_ARM_NO_COMPASS
+define HAL_PROBE_EXTERNAL_I2C_COMPASSES
 define HAL_COMPASS_MAX_SENSORS 1
 
-# added QMC5883L for different board varients
-COMPASS QMC5883L I2C:0:0xd false ROTATION_PITCH_180_YAW_90
+
+# ---------------------- COMPASS ---------------------------
+#define HAL_PERIPH_ENABLE_MAG
+#
+#SPIDEV  rm3100 SPI2 DEVID1   MAG_CS MODE0  1*MHZ  1*MHZ
+#COMPASS RM3100 SPI:rm3100 false ROTATION_PITCH_180
+#
+#define HAL_COMPASS_MAX_SENSORS 1
+#
+## added QMC5883L for different board varients
+#COMPASS QMC5883L I2C:0:0xd false ROTATION_PITCH_180_YAW_90
 
 
 # --------------------- DPS310 ---------------------------
