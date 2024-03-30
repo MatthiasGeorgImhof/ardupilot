@@ -28,6 +28,8 @@
 #include "Socket.hpp"
 #endif
 
+#undef AP_NETWORKING_BACKEND_CHIBIOS
+#define AP_NETWORKING_BACKEND_CHIBIOS 1
 #if AP_NETWORKING_BACKEND_CHIBIOS || AP_NETWORKING_BACKEND_PPP
 #include <lwip/sockets.h>
 #else
